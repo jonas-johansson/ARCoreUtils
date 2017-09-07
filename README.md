@@ -60,5 +60,3 @@ Note that the shadow strength can be lowered to make it a bit softer, the math s
 
 
 Happy hacking!
-
-- Jonas Johansson
