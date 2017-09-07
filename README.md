@@ -26,7 +26,7 @@ The only problem with that is that there is no floor in the virtual scene that c
 
 From what I know, there's no suitable shader in Unity out-of-the-box, so I decided to create a new one. I'll get back to that shader in a bit, but first: we need a light source that casts shadows. Make sure you have a white directional light in the virtual scene, pointing downward. It's not a perfect representation of the real scene light, of course, but most light come from above, so it'll do for now.
 
-I add a MeshRenderer and a MeshFilter for all trackable planes, using the same mesh we created for the collision previously. The MeshRenderer uses a material with the new shader.
+A MeshRenderer and a MeshFilter is created for all trackable planes, using the same mesh we created for the collision previously. The MeshRenderer uses a material with the new shader.
 
 #### The ARSurface shader
 ##### Desired result
@@ -60,4 +60,5 @@ Note that the shadow strength can be lowered to make it a bit softer, the math s
 
 
 Happy hacking!
-Jonas Johansson
+
+- Jonas Johansson
