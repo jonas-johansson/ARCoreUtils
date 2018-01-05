@@ -9,6 +9,7 @@ public class ARSurface : MonoBehaviour
 	MeshFilter m_meshFilter;
 	MeshRenderer m_meshRenderer;
 	List<Vector3> m_points = new List<Vector3>();
+	List<Vector3> m_previousFramePoints = new List<Vector3>();
 	Mesh m_mesh;
 
 	void Awake()
@@ -26,7 +27,7 @@ public class ARSurface : MonoBehaviour
 	{
 		m_trackedPlane = plane;
 		m_meshRenderer.material = material;
-		UpdateMesh();
+		Update();
 	}
 
 	void Update()
@@ -40,7 +41,7 @@ public class ARSurface : MonoBehaviour
 			Destroy(gameObject);
 			return;
 		}
-		else if (!m_trackedPlane.IsValid || Frame.TrackingState != FrameTrackingState.Tracking)
+		else if (Frame.TrackingState != TrackingState.Tracking)
 		{
 			m_meshRenderer.enabled = false;
 			m_meshCollider.enabled = false;
@@ -50,15 +51,17 @@ public class ARSurface : MonoBehaviour
 		m_meshRenderer.enabled = true;
 		m_meshCollider.enabled = true;
 
-		if (m_trackedPlane.IsUpdated)
-		{
-			UpdateMesh();
-		}
+		UpdateMeshIfNeeded();
 	}
 
-	void UpdateMesh()
+	void UpdateMeshIfNeeded()
 	{
-		m_trackedPlane.GetBoundaryPolygon(ref m_points);
+		m_trackedPlane.GetBoundaryPolygon(m_points);
+
+		if (AreVerticesListsEqual(m_previousFramePoints, m_points))
+		{
+			return;
+		}
 
 		int[] indices = TriangulatorXZ.Triangulate(m_points);
 
@@ -69,5 +72,23 @@ public class ARSurface : MonoBehaviour
 
 		m_meshCollider.sharedMesh = null;
 		m_meshCollider.sharedMesh = m_mesh;
+	}
+
+	bool AreVerticesListsEqual(List<Vector3> firstList, List<Vector3> secondList)
+	{
+		if (firstList.Count != secondList.Count)
+		{
+			return false;
+		}
+
+		for (int i = 0; i < firstList.Count; i++)
+		{
+			if (firstList[i] != secondList[i])
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
