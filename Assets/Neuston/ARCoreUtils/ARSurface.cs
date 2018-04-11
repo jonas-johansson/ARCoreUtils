@@ -41,7 +41,7 @@ public class ARSurface : MonoBehaviour
 			Destroy(gameObject);
 			return;
 		}
-		else if (Frame.TrackingState != TrackingState.Tracking)
+        else if (Session.Status != SessionStatus.Tracking)  
 		{
 			m_meshRenderer.enabled = false;
 			m_meshCollider.enabled = false;
