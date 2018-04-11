@@ -24,22 +24,23 @@ namespace GoogleARCoreInternal
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
     using GoogleARCore;
+    using UnityEngine;
 
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
     Justification = "Internal")]
     public class LightEstimateApi
     {
-        private NativeApi m_NativeApi;
+        private NativeSession m_NativeSession;
 
-        public LightEstimateApi(NativeApi nativeApi)
+        public LightEstimateApi(NativeSession nativeSession)
         {
-            m_NativeApi = nativeApi;
+            m_NativeSession = nativeSession;
         }
 
         public IntPtr Create()
         {
             IntPtr lightEstimateHandle = IntPtr.Zero;
-            ExternApi.ArLightEstimate_create(m_NativeApi.SessionHandle, ref lightEstimateHandle);
+            ExternApi.ArLightEstimate_create(m_NativeSession.SessionHandle, ref lightEstimateHandle);
             return lightEstimateHandle;
         }
 
@@ -51,16 +52,24 @@ namespace GoogleARCoreInternal
         public LightEstimateState GetState(IntPtr lightEstimateHandle)
         {
             ApiLightEstimateState state = ApiLightEstimateState.NotValid;
-            ExternApi.ArLightEstimate_getState(m_NativeApi.SessionHandle, lightEstimateHandle, ref state);
+            ExternApi.ArLightEstimate_getState(m_NativeSession.SessionHandle, lightEstimateHandle, ref state);
             return state.ToLightEstimateState();
         }
 
         public float GetPixelIntensity(IntPtr lightEstimateHandle)
         {
             float pixelIntensity = 0;
-            ExternApi.ArLightEstimate_getPixelIntensity(m_NativeApi.SessionHandle,
+            ExternApi.ArLightEstimate_getPixelIntensity(m_NativeSession.SessionHandle,
                 lightEstimateHandle, ref pixelIntensity);
             return pixelIntensity;
+        }
+
+        public Color GetColorCorrection(IntPtr lightEstimateHandle)
+        {
+            Color colorCorrection = Color.black;
+            ExternApi.ArLightEstimate_getColorCorrection(m_NativeSession.SessionHandle,
+                lightEstimateHandle, ref colorCorrection);
+            return colorCorrection;
         }
 
         private struct ExternApi
@@ -79,6 +88,10 @@ namespace GoogleARCoreInternal
             [DllImport(ApiConstants.ARCoreNativeApi)]
             public static extern void ArLightEstimate_getPixelIntensity(IntPtr sessionHandle,
                 IntPtr lightEstimateHandle, ref float pixelIntensity);
+
+            [DllImport(ApiConstants.ARCoreNativeApi)]
+            public static extern void ArLightEstimate_getColorCorrection(IntPtr sessionHandle,
+                IntPtr lightEstimateHandle, ref Color colorCorrection);
         }
     }
 }

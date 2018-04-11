@@ -13,12 +13,12 @@ public class ARSurfaceManager : MonoBehaviour
 		return;
 #endif
 
-		if (Frame.TrackingState != TrackingState.Tracking)
+        if (Session.Status != SessionStatus.Tracking)
 		{
 			return;
 		}
 
-		Frame.GetPlanes(m_newPlanes, TrackableQueryFilter.New);
+        Session.GetTrackables<TrackedPlane>(m_newPlanes, TrackableQueryFilter.New);
 
 		foreach (var plane in m_newPlanes)
 		{
