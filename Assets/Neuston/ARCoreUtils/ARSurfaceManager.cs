@@ -9,21 +9,18 @@ public class ARSurfaceManager : MonoBehaviour
 
 	void Update()
 	{
-#if UNITY_EDITOR
-		return;
-#endif
-
-        if (Session.Status != SessionStatus.Tracking)
+		if (Session.Status != SessionStatus.Tracking)
 		{
 			return;
 		}
 
-        Session.GetTrackables<TrackedPlane>(m_newPlanes, TrackableQueryFilter.New);
+		Session.GetTrackables(m_newPlanes, TrackableQueryFilter.New);
 
 		foreach (var plane in m_newPlanes)
 		{
 			var surfaceObj = new GameObject("ARSurface");
-			surfaceObj.AddComponent<ARSurface>().SetTrackedPlane(plane, m_surfaceMaterial);
+			var arSurface = surfaceObj.AddComponent<ARSurface>();
+			arSurface.SetTrackedPlane(plane, m_surfaceMaterial);
 		}
 	}
 }

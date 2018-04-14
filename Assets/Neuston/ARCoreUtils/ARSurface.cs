@@ -21,6 +21,11 @@ public class ARSurface : MonoBehaviour
 		m_mesh = new Mesh();
 		m_meshFilter.mesh = m_mesh;
 		m_meshCollider.sharedMesh = m_mesh;
+
+		// Move the ARSurface up slightly to avoid flickering for those
+		// who render additional geometry beneath the ARSurface.
+		Vector3 oneCentimeterUp = Vector3.up * 0.01f;
+		transform.Translate(oneCentimeterUp, Space.Self);
 	}
 
 	public void SetTrackedPlane(TrackedPlane plane, Material material)
@@ -41,7 +46,7 @@ public class ARSurface : MonoBehaviour
 			Destroy(gameObject);
 			return;
 		}
-        else if (Session.Status != SessionStatus.Tracking)  
+		else if (Session.Status != SessionStatus.Tracking)
 		{
 			m_meshRenderer.enabled = false;
 			m_meshCollider.enabled = false;
@@ -58,7 +63,7 @@ public class ARSurface : MonoBehaviour
 	{
 		m_trackedPlane.GetBoundaryPolygon(m_points);
 
-		if (AreVerticesListsEqual(m_previousFramePoints, m_points))
+		if (AreVertexListsEqual(m_previousFramePoints, m_points))
 		{
 			return;
 		}
@@ -74,7 +79,7 @@ public class ARSurface : MonoBehaviour
 		m_meshCollider.sharedMesh = m_mesh;
 	}
 
-	bool AreVerticesListsEqual(List<Vector3> firstList, List<Vector3> secondList)
+	bool AreVertexListsEqual(List<Vector3> firstList, List<Vector3> secondList)
 	{
 		if (firstList.Count != secondList.Count)
 		{
