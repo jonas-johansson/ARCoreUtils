@@ -1,6 +1,5 @@
-
-ARCoreUtils.csproj
-ARCoreUtils.sln
-arcoreutilspreview2.apk
+*.csproj
+*.sln
 Library
 Temp
+.vs
